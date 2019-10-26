@@ -151,6 +151,15 @@ Push the jenkinsfiles(checked in this repo for your ref) along with application 
 Solution:-  
 Deployment on dev/qa/prod will be performed based on mentioned configuration in jenkinsfiles and commits made in git branch(dev/qa/prod) respectively. Please refer committed jenkinsfiles for exact implementation of deployment on dev/qa/prod.  
 
-8. Please suggest a monitoring solution for your system. How would you notify an admin
-that the resources are scarce?  
+8. Please suggest a monitoring solution for your system. How would you notify an admin that the resources are scarce?  
 Solutions:-  
+There are several stats can be monitor for above system at Kubernetes Clusters, Nodes, Deployments, Containers and  Application level by using below open sources and licensed monitoring products:-
+1.Probes
+2.cAdvisor
+3.Heapster
+4.Kubernetes Dashboard
+5.Kube-state-metrics
+6.Sysdig
+7.Grafana
+8.Datadog
+9.Prometheus, etc.

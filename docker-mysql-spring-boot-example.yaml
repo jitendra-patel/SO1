@@ -50,10 +50,10 @@ metadata:
   labels:
     app: docker-mysql-spring-boot-example
 spec:                         
-  type: NodePort              # The service will be exposed by opening a Port on each node and proxying it. 
+  type: LoadBalancer 
   selector:
     app: docker-mysql-spring-boot-example   # The service exposes Pods with label `app=polling-app-server`
-  ports:                      # Forward incoming connections on port 8080 to the target port 8080
+  ports:                      # Forward incoming connections on port 80 to the target port 8080
   - name: http
-    port: 8080
+    port: 80
     targetPort: 8080

@@ -1,0 +1,59 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docker-mysql-spring-boot-example
+  labels:
+    app: docker-mysql-spring-boot-example
+spec:
+  replicas: 2                 # No. of replicas/pods to run in this deployment
+  selector:
+    matchLabels:
+      app: docker-mysql-spring-boot-example
+  template:
+    metadata:
+      labels:
+        app: docker-mysql-spring-boot-example
+    spec:
+      containers:
+      - name: docker-mysql-spring-boot-example
+        image: callicoder/polling-app-server:1.0.0
+        imagePullPolicy: IfNotPresent
+        ports:
+          - name: http
+            containerPort: 8080 # The port that the container exposes
+        resources:
+          limits:
+            cpu: 0.2
+            memory: "200Mi"
+        env:                  # Environment variables supplied to the Pod
+        - name: SPRING_DATASOURCE_USERNAME # Name of the environment variable
+          valueFrom:          # Get the value of environment variable from kubernetes secrets
+            secretKeyRef:
+              name: mysql-user-pass
+              key: username
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-user-pass
+              key: password
+        - name: SPRING_DATASOURCE_URL
+          valueFrom:
+            secretKeyRef:
+              name: mysql-db-url
+              key: url
+---
+apiVersion: v1
+kind: Service
+metadata:                     
+  name: docker-mysql-spring-boot-example
+  labels:
+    app: docker-mysql-spring-boot-example
+spec:                         
+  type: NodePort              # The service will be exposed by opening a Port on each node and proxying it. 
+  selector:
+    app: docker-mysql-spring-boot-example   # The service exposes Pods with label `app=polling-app-server`
+  ports:                      # Forward incoming connections on port 8080 to the target port 8080
+  - name: http
+    port: 8080
+    targetPort: 8080

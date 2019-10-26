@@ -1,6 +1,7 @@
 # so1
 
-Task 1: Create a nagios check that will trigger in case of 3 occurrences of a "Handbill not printed" string
+Task 1:  
+Create a nagios check that will trigger in case of 3 occurrences of a "Handbill not printed" string
 in Elasticsearch. (If you don't know nagios, you could consider creating script that will output
 meaningful status)
 Solution:-
@@ -154,12 +155,12 @@ Deployment on dev/qa/prod will be performed based on mentioned configuration in 
 8. Please suggest a monitoring solution for your system. How would you notify an admin that the resources are scarce?  
 Solutions:-  
 There are several stats can be monitor for above system at Kubernetes Clusters, Nodes, Deployments, Containers and  Application level by using below open sources and licensed monitoring products:-
-1.Probes
-2.cAdvisor
-3.Heapster
-4.Kubernetes Dashboard
-5.Kube-state-metrics
-6.Sysdig
-7.Grafana
-8.Datadog
-9.Prometheus, etc.
+1.Probes  
+2.cAdvisor  
+3.Heapster  
+4.Kubernetes Dashboard  
+5.Kube-state-metrics  
+6.Sysdig  
+7.Grafana  
+8.Datadog  
+9.Prometheus, etc.  

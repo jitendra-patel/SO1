@@ -3,7 +3,7 @@
 Task 1:  
 Create a nagios check that will trigger in case of 3 occurrences of a "Handbill not printed" string
 in Elasticsearch. (If you don't know nagios, you could consider creating script that will output
-meaningful status)
+meaningful status)  
 Solution:-
 ```
 $ python ESClusterErrorCheck.py --host=<ESClusterURL> --port=<ESClusterPort(defaults to 9200)>

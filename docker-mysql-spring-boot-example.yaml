@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: docker-mysql-spring-boot-example
-        image: callicoder/polling-app-server:1.0.0
+        image: <AWS Account ID>.dkr.ecr.<AWS Region>.amazonaws.com/docker-mysql-spring-boot-example
         imagePullPolicy: IfNotPresent
         ports:
           - name: http

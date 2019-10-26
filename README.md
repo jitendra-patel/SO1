@@ -66,4 +66,82 @@ l. Deploy docker-mysql-spring-boot-example application by applying the yaml conf
 ```
 $ kubectl apply -f docker-mysql-spring-boot-example.yaml
 ```
-b. 
+
+2. Load balance the traffic to the backends.
+Solution:-
+Load balance the traffic of docker-mysql-spring-boot-example application to backend 2 pods by creating its service object as 'LoadBalancer' type:-
+```
+apiVersion: v1
+kind: Service
+metadata:                     
+  name: docker-mysql-spring-boot-example
+  labels:
+    app: docker-mysql-spring-boot-example
+spec:                         
+  type: LoadBalancer 
+  selector:
+    app: docker-mysql-spring-boot-example   # The service exposes Pods with label `app=polling-app-server`
+  ports:                      # Forward incoming connections on port 80 to the target port 8080
+  - name: http
+    port: 80
+    targetPort: 8080
+```
+
+3. Create policy to auto-heal or recreate the pod if it goes down or is unresponsive.
+Solution:-
+```
+$ kubectl scale deployment docker-mysql-spring-boot-example --replicas=2
+```
+
+4. Add a mysql.
+Solution:-
+```
+$ kubectl apply -f mysql-deployment.yaml
+```
+
+5. Can you do a HA of a database? Any way to keep the data persistent when pods are recreated?
+Solution:-
+HA of a MYSQL database can be maintained by having below configuration in mysql-deployment.yaml, which ensure the running of one MYSQL POD always and spin up the new MYSQL POD as soon as old POD stops working:-
+```
+strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  replicas: 1
+```
+Data persistency can be maintained even after recreation of MYSQL POD by having below configuration in its YAML file:-
+```
+apiVersion: v1
+kind: PersistentVolume            # Create a PersistentVolume
+metadata:
+  name: mysql-pv
+  labels:
+    type: local
+spec:
+  storageClassName: standard      # Storage class. A PV Claim requesting the same storageClass can be bound to this volume. 
+  capacity:
+    storage: 250Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:                       # hostPath PersistentVolume is used for development and testing. It uses a file/directory on the Node to emulate network-attached storage
+    path: "/mnt/data"
+  persistentVolumeReclaimPolicy: Retain  # Retain the PersistentVolume even after PersistentVolumeClaim is deleted. The volume is considered “released”. But it is not yet available for another claim because the previous claimant’s data remains on the volume. 
+---    
+apiVersion: v1
+kind: PersistentVolumeClaim        # Create a PersistentVolumeClaim to request a PersistentVolume storage
+metadata:
+  name: mysql-pv-claim
+  labels:
+    app: polling-app
+spec:
+  storageClassName: standard       # Request a certain storage class
+  accessModes:
+    - ReadWriteOnce                # ReadWriteOnce means the volume can be mounted as read-write by a single Node
+  resources:
+    requests:
+      storage: 250Mi
+---
+```
+6. Add CI to the deployment process.
+```

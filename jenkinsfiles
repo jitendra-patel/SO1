@@ -1,0 +1,64 @@
+node{
+
+  def project = 'docker-mysql-spring-boot-example'
+  def appName = 'docker-mysql-spring-boot-example'
+  def serviceName = "${appName}"  
+  def imageVersion = 'latest'
+  def imageTag = "<AWS Account ID>.dkr.ecr.<AWS Region>.amazonaws.com/${appName}:${appName}.${env.BUILD_NUMBER}"
+  
+  //Checkout Code from Git
+  checkout scm
+  
+  //Stage 1 : Build the docker image.
+  stage('Build image') {
+      sh("./mvnw clean package")
+      sh("docker build -t ${appName} .")
+  }
+  
+  //Stage 2 : Push the image to docker registry
+  stage('Push image to registry') {
+      sh("docker push ${imageTag}")
+  }
+  
+  //Stage 3 : Deploy Application
+  stage('Deploy Application on Dev') {
+       switch (dev) {
+              case "dev":
+                   // Create namespace if it doesn't exist
+                   sh("kubectl get ns dev || kubectl create ns dev")
+           //Update the imagetag to the latest version
+                   sh("sed -i.bak 's#gcr.io/${project}/${appName}:${imageVersion}#${imageTag}#' development/*.yaml")
+                   //Create or update resources
+           sh("kubectl --namespace=dev apply -f dev/${appName}.yaml")
+           //Grab the external Ip address of the service
+                   sh("echo http://`kubectl --namespace=dev get service/${appName} --output=json | jq -r '.status.loadBalancer.ingress[0].ip'` > ${appName}")
+                   break
+                   
+  stage('Deploy Application on QA') {
+       switch (qa) {
+              case "qa":
+                   // Create namespace if it doesn't exist
+                   sh("kubectl get ns qa || kubectl create ns qa")
+           //Update the imagetag to the latest version
+                   sh("sed -i.bak 's#gcr.io/${project}/${appName}:${imageVersion}#${imageTag}#' development/*.yaml")
+                   //Create or update resources
+           sh("kubectl --namespace=qa apply -f qa/${appName}.yaml")
+           //Grab the external Ip address of the service
+                   sh("echo http://`kubectl --namespace=qa get service/${appName} --output=json | jq -r '.status.loadBalancer.ingress[0].ip'` > ${appName}")
+                   break
+                   
+  stage('Deploy Application on Prod') {
+       switch (prod) {
+              case "prod":
+                   // Create namespace if it doesn't exist
+                   sh("kubectl get ns prod || kubectl create ns prod")
+           //Update the imagetag to the latest version
+                   sh("sed -i.bak 's#gcr.io/${project}/${appName}:${imageVersion}#${imageTag}#' development/*.yaml")
+                   //Create or update resources
+           sh("kubectl --namespace=prod apply -f prod/${appName}.yaml")
+           //Grab the external Ip address of the service
+                   sh("echo http://`kubectl --namespace=prod get service/${appName} --output=json | jq -r '.status.loadBalancer.ingress[0].ip'` > ${appName}")
+                   break                 
+  }
+
+}

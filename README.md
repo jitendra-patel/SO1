@@ -10,7 +10,7 @@ $ python ESClusterErrorCheck.py --host=<ESClusterURL> --port=<ESClusterPort(defa
   
 Task 3(most important):
 1. Set up (in kubernetes/minikube) 2 pods with a java example app: https://github.com/TechPrimers/docker-mysql-spring-boot-example  
-Solution:-
+Solution:-  
 a. Take checkout of this git repo(https://github.com/TechPrimers/docker-mysql-spring-boot-example):-
 ```
    $ git clone https://github.com/TechPrimers/docker-mysql-spring-boot-example
@@ -67,8 +67,8 @@ l. Deploy docker-mysql-spring-boot-example application by applying the yaml conf
 $ kubectl apply -f docker-mysql-spring-boot-example.yaml
 ```
 
-2. Load balance the traffic to the backends.
-Solution:-
+2. Load balance the traffic to the backends.  
+Solution:-  
 Load balance the traffic of docker-mysql-spring-boot-example application to backend 2 pods by creating its service object as 'LoadBalancer' type:-
 ```
 apiVersion: v1
@@ -87,20 +87,20 @@ spec:
     targetPort: 8080
 ```
 
-3. Create policy to auto-heal or recreate the pod if it goes down or is unresponsive.
-Solution:-
+3. Create policy to auto-heal or recreate the pod if it goes down or is unresponsive.  
+Solution:-  
 ```
 $ kubectl scale deployment docker-mysql-spring-boot-example --replicas=2
 ```
 
-4. Add a mysql.
-Solution:-
+4. Add a mysql.  
+Solution:-  
 ```
 $ kubectl apply -f mysql-deployment.yaml
 ```
 
-5. Can you do a HA of a database? Any way to keep the data persistent when pods are recreated?  
-Solution:-
+5. Can you do a HA of a database? Any way to keep the data persistent when pods are recreated?    
+Solution:-  
 HA of a MYSQL database can be maintained by having below configuration in mysql-deployment.yaml, which ensure the running of one MYSQL POD always and spin up the new MYSQL POD as soon as old POD stops working:-
 ```
 strategy:

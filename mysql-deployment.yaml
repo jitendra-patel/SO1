@@ -40,7 +40,11 @@ spec:
       app: docker-mysql-spring-boot-example
       tier: mysql
   strategy:
-    type: Recreate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  replicas: 1
   template:
     metadata:
       labels:

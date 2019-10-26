@@ -143,5 +143,14 @@ spec:
       storage: 250Mi
 ---
 ```
-6. Add CI to the deployment process.
-```
+6. Add CI to the deployment process.  
+Solution:-  
+Push the jenkinsfiles(checked in this repo for your ref) along with application code base in each git branch(dev/qa/prod) so that CI/CD will be get trigger upon every successful commit to Git repo after setup of jenkins job on Jenkins console.  
+
+7. Split your deployment into prd/qa/dev environment.  
+Solution:-  
+Deployment on dev/qa/prod will be performed based on mentioned configuration in jenkinsfiles and commits made in git branch(dev/qa/prod) respectively. Please refer committed jenkinsfiles for exact implementation of deployment on dev/qa/prod.  
+
+8. Please suggest a monitoring solution for your system. How would you notify an admin
+that the resources are scarce?  
+Solutions:-  

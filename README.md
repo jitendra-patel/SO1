@@ -10,8 +10,10 @@ $ python ESClusterErrorCheck.py --host=<ESClusterURL> --port=<ESClusterPort(defa
   
 Task 3(most important):
 1. Set up (in kubernetes/minikube) 2 pods with a java example app:
-https://github.com/TechPrimers/docker-mysql-spring-boot-example
+https://github.com/TechPrimers/docker-mysql-spring-boot-example 
+<br />
 Solution:-
+<br />
 a. Take checkout of this git repo(https://github.com/TechPrimers/docker-mysql-spring-boot-example):-
 ```
    $ git clone https://github.com/TechPrimers/docker-mysql-spring-boot-example

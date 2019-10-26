@@ -1,4 +1,4 @@
-# so1
+# SO1
 
 Task 1:  
 Create a nagios check that will trigger in case of 3 occurrences of a "Handbill not printed" string

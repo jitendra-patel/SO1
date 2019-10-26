@@ -44,12 +44,26 @@ g. Push the image to AWS ECR:-
 ```
    $ docker push <AWS Account ID>.dkr.ecr.<AWS Region>.amazonaws.com/docker-mysql-spring-boot-example:docker-mysql-spring-boot-example
 ```
-h. Execute create secret on kubernetes to pull docker image from AWS ECR script before kubernetes deployment:-
+h. Start a minikube kubernate cluster:-
+```
+   $ minikube start
+```
+i. Execute create secret on kubernetes to pull docker image from AWS ECR script before kubernetes deployment:-
 ```
    $ sh create_secret_pull_image_ecr.sh
 ```
-Start a minikube kubernate cluster:-
+j. Create the kubernetes secrets to store MYSQL username & its password along with URL:-
 ```
-   $ minikube start
+$ kubectl create secret generic mysql-root-pass --from-literal=password=password
+$ kubectl create secret generic mysql-user-pass --from-literal=username=sa --from-literal=password=password
+$ kubectl create secret generic mysql-db-url --from-literal=database=polls --from-literal=url='jdbc:mysql://mysql-standalone:3306/test'
+```
+k. Deploy MySQL by applying the yaml configuration file(mysql-deployment.yaml):-
+```
+$ kubectl apply -f mysql-deployment.yaml
+```
+l. Deploy docker-mysql-spring-boot-example application by applying the yaml configuration file(docker-mysql-spring-boot-example.yaml):-
+```
+$ kubectl apply -f docker-mysql-spring-boot-example.yaml
 ```
 b. 
